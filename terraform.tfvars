@@ -1,4 +1,4 @@
-resource_group_name           = "rg-aks-prod"
+resource_group_name           = "rg-mdtech-aks-prod"
 location                      = "East US"
 cluster_name                  = "aks-prod-secure"
 kubernetes_version            = "1.30"
