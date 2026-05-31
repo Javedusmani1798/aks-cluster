@@ -37,15 +37,15 @@ module "aks" {
   prefix              = var.dns_prefix
   cluster_name        = var.cluster_name
   kubernetes_version  = var.kubernetes_version
-  
-  private_cluster_enabled = true
-  rbac_aad                = var.enable_azure_active_directory
-  rbac_aad_managed        = true
+
+  private_cluster_enabled         = true
+  rbac_aad                        = var.enable_azure_active_directory
+  rbac_aad_managed                = true
   rbac_aad_admin_group_object_ids = var.admin_group_object_ids
   rbac_aad_azure_rbac_enabled     = true
 
   vnet_subnet_id = azurerm_subnet.aks_subnet.id
-  
+
   # Network profile
   network_plugin = "azure"
   network_policy = "azure"
@@ -53,7 +53,7 @@ module "aks" {
   # Default node pool
   agents_count = var.node_count
   agents_size  = var.vm_size
-  
+
   # Monitoring
   log_analytics_workspace_enabled = true
   log_analytics_workspace = {
