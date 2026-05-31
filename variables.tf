@@ -25,7 +25,7 @@ variable "dns_prefix" {
 variable "kubernetes_version" {
   description = "The version of Kubernetes to use for the AKS cluster."
   type        = string
-  default     = "1.27"
+  default     = "1.30"
 }
 
 variable "vnet_address_space" {

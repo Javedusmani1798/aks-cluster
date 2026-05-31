@@ -1,7 +1,7 @@
 resource_group_name           = "rg-aks-prod"
 location                      = "East US"
 cluster_name                  = "aks-prod-secure"
-kubernetes_version            = "1.27"
+kubernetes_version      = "1.30"
 node_count                    = 3
 vm_size                       = "Standard_DS2_v2"
 enable_azure_active_directory = true
