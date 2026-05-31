@@ -1,0 +1,30 @@
+# Local .terraform directory
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude terraform.tfvars if it contains secrets
+# terraform.tfvars
+# *.tfvars.json
+
+# Ignore override files as they may contain local-specific configurations
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do want to add to source control using !
+# !example_override.tf
+
+# Include plugin cache directory
+.terraform.lock.hcl
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
