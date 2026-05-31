@@ -3,9 +3,9 @@ output "resource_group_name" {
 }
 
 output "kubernetes_cluster_name" {
-  value = module.aks.aks_name
+  value = azurerm_kubernetes_cluster.aks.name
 }
 
 output "aks_id" {
-  value = module.aks.aks_id
+  value = azurerm_kubernetes_cluster.aks.id
 }

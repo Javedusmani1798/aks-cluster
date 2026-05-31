@@ -28,37 +28,50 @@ resource "azurerm_log_analytics_workspace" "law" {
   tags                = var.tags
 }
 
-module "aks" {
-  source  = "Azure/aks/azurerm"
-  version = "9.1.0"
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                    = var.cluster_name
+  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg.name
+  dns_prefix              = var.dns_prefix
+  kubernetes_version      = var.kubernetes_version
+  private_cluster_enabled = true
+  local_account_disabled  = true
 
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  prefix              = var.dns_prefix
-  cluster_name        = var.cluster_name
-  kubernetes_version  = var.kubernetes_version
+  default_node_pool {
+    name                = "default"
+    node_count          = var.node_count
+    vm_size             = var.vm_size
+    vnet_subnet_id      = azurerm_subnet.aks_subnet.id
+    type                = "VirtualMachineScaleSets"
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = 3
+    os_sku              = "Ubuntu"
+  }
 
-  private_cluster_enabled         = true
-  rbac_aad                        = var.enable_azure_active_directory
-  rbac_aad_managed                = true
-  rbac_aad_admin_group_object_ids = var.admin_group_object_ids
-  rbac_aad_azure_rbac_enabled     = true
+  identity {
+    type = "SystemAssigned"
+  }
 
-  vnet_subnet_id = azurerm_subnet.aks_subnet.id
+  network_profile {
+    network_plugin    = "azure"
+    network_policy    = "azure"
+    load_balancer_sku = "standard"
+    service_cidr      = "10.1.0.0/16"
+    dns_service_ip    = "10.1.0.10"
+  }
 
-  # Network profile
-  network_plugin = "azure"
-  network_policy = "azure"
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
+  }
 
-  # Default node pool
-  agents_count = var.node_count
-  agents_size  = var.vm_size
-
-  # Monitoring
-  log_analytics_workspace_enabled = true
-  log_analytics_workspace = {
-    id   = azurerm_log_analytics_workspace.law.id
-    name = azurerm_log_analytics_workspace.law.name
+  dynamic "azure_active_directory_role_based_access_control" {
+    for_each = var.enable_azure_active_directory ? [1] : []
+    content {
+      managed                = true
+      admin_group_object_ids = var.admin_group_object_ids
+      azure_rbac_enabled     = true
+    }
   }
 
   tags = var.tags
